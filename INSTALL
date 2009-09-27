@@ -1,0 +1,8 @@
+INSTALL
+-------
+
+To install, you will need GNU Fortran and GNU Autotools installed.
+
+Then from this directory run -
+
+./configure && make && make install

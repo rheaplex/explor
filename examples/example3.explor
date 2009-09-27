@@ -1,0 +1,11 @@
+c     Example 3
+
+ 131  do 3 k = 1, 18
+ 132     iy = 8 + 3 * k
+ 133     ix = ne(15, 105)
+ 134     if(num(ix, iy) .NE. 0) go to 133
+ 135     iw = 18 - k
+ 136     ih = k - 1  
+ 137  do 8 j = 1, 9
+ 138     call chanj(ix, iy, iw + 2 * j, ih + 2 * (10 - j), 100, 3012)
+ 139  call show(60, 40, 120, 80)

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Usage
+
+if [ $# -ne 1 ]
+then
+   echo "Usage $0 filename.explor"
+   exit 2             	
+fi
+
+# Create filenames
+
+FORTRAN_FILE=$(echo $1 | sed s/.explor/.f/)
+#OBJECT_FILE=$(echo $1 | sed s/\.explor/\.o/)
+EXECUTABLE_FILE=$(echo $1 | sed s/\.explor//)
+OUTPUT_FILE=$(echo $1 | sed s/\.ps//)
+
+# Wrap Explor program in Fortran
+
+echo "\
+      program explor
+      call initexplor
+$(cat $1)
+      end
+" > $FORTRAN_FILE
+
+# Compile
+# mini-explor.f should be a library...
+@fortran@ -combine -o $EXECUTABLE_FILE \
+    @pkgdatadir@/mini-explor.f $FORTRAN_FILE 

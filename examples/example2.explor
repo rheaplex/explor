@@ -1,0 +1,7 @@
+c     Example 2
+      
+      do 123 ix=1,120
+      	 do 123 iy=1,80
+ 123        call put(ix, iy, 
+     +           mod(abs((ix - iy) * (ix + (2 * iy))) / 70, 4))
+      call show(60, 40, 120, 80)

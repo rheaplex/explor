@@ -1,0 +1,278 @@
+
+c combn
+c Cells are processed left-to-right, bottom-to-top
+
+      integer function combn0 (from, to, r0, r1, r2, r3)
+      integer from, to, r0, r1, r2, r3
+      integer rule, rr0, rr1, rr2, rr3
+      integer r
+      if(from .EQ. 0) rule = r0
+      if(from .EQ. 1) rule = r1
+      if(from .EQ. 2) rule = r2
+      if(from .EQ. 3) rule = r3
+      call n4n(rule, rr0, rr1, rr2, rr3)
+      if(to .EQ. 0) combn0 = rr0
+      if(to .EQ. 1) combn0 = rr1
+      if(to .EQ. 2) combn0 = rr2
+      if(to .EQ. 3) combn0 = rr3
+      return
+      end
+
+      subroutine combn (x, y, w, h, prob, xf, yf, orient, 
+     +     r0, r1, r2, r3)
+      integer x, y, w, h, prob, xf, yf, orient, r0, r1, r2, r3
+      if(ne(0,100) .LT. prob) then
+         if(orient .EQ. 1) combn1(x, y, w, h, prob, xf, yf, r0, r1, r2, 
+     +        r3)
+c         if(orient .EQ. 2) combn2(x, y, w, h, prob, xf, yf, r0, r1, r2,
+c     +        r3)
+c         if(orient .EQ. 3) combn3(x, y, w, h, prob, xf, yf, r0, r1, r2,
+c     +        r3)
+c         if(orient .EQ. 4) combn4(x, y, w, h, prob, xf, yf, r0, r1, r2,
+c     +        r3)
+         if(orient .EQ. 5) combn5(x, y, w, h, prob, xf, yf, r0, r1, r2,
+     +        r3)
+c         if(orient .EQ. 6) combn6(x, y, w, h, prob, xf, yf, r0, r1, r2,
+c     +        r3)
+c         if(orient .EQ. 7) combn7(x, y, w, h, prob, xf, yf, r0, r1, r2,
+c     +        r3)
+c         if(orient .EQ. 8) combn8(x, y, w, h, prob, xf, yf, r0, r1, r2,
+c     +        r3)
+      endif
+      return
+      end
+
+
+c Straight copy
+
+      subroutine combn1 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j, n
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, w, h, left2, right2, bottom2, top2)
+      do 10 i = 0, w
+         do 20 j = 0, h
+         if((prob .EQ. 100) .OR. (ne(0,99) .LT. prob)) then
+            n = combn0(num(left1 + i, bottom1 + j),
+     +           num(left2 + i, bottom2 + j), r0, r1, r2, r3)
+               call put(left1 + i, bottom1 + j, n)
+            endif
+ 20      continue
+ 10   continue
+      return
+      end
+      
+
+
+c Rotate 90 degrees clockwise
+
+      subroutine combn2 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, h, w, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob)
+            call put(left1 + i, bottom1 + j, 
+     +           combni(num(left1 + i, bottom1 + j),
+     +           num(left2 + j, top2 - i), r0, r1, r2, r3))
+      return
+      end
+
+c Rotate 180 degrees clockwise
+
+      subroutine combn3 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, w, h, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob)
+            call put(left1 + i, bottom1 + j, 
+     +           combni(num(left1 + i, bottom1 + j),
+     +           num(left2 + i, top2 - j), r0, r1, r2, r3))
+      return
+      end
+
+c Rotate 90 degrees anticlockwise
+
+      subroutine combn4 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, h, w, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob)
+            call put(left1 + i, bottom1 + j, 
+     +           combni(num(left1 + i, bottom1 + j),
+     +           num(right2 - j, bottom2 + i), r0, r1, r2, r3))
+      return
+      end
+
+c Flip right/left
+
+      subroutine combn5 (x, y, w, h, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, w, h, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            call put(left1 + i, bottom1 + j, 
+     +           combn0(num(left1 + i, bottom1 + j),
+     +           num(right2 - i, bottom2 + j), r0, r1, r2, r3))
+      return
+      end
+
+c Right/left flip and rotate 90 degrees clockwise
+
+      subroutine combn6 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, h, w, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob)
+            call put(left1 + i, bottom1 + j, 
+     +           combni(num(left1 + i, bottom1 + j),
+     +           num(left2 + j, bottom2 + i), r0, r1, r2, r3))
+      return
+      end
+
+c Right/left flip and rotate 180 degrees clockwise
+
+      subroutine combn7 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, w, h, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob)
+            call put(left1 + i, bottom1 + j, 
+     +           combni(num(left1 + i, bottom1 + j),
+     +           num(left2 + i, top2 - j), r0, r1, r2, r3))
+      return
+      end
+
+c Right/left flip and rotate 90 degrees anticlockwise
+
+      subroutine combn8 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, h, w, left2, right2, bottom2, top2)
+      do 101 i = 0, w
+         do 101 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob)
+            call put(left1 + i, bottom1 + j, 
+     +           combni(num(left1 + i, bottom1 + j),
+     +           num(right2 - j, top2 - i), r0, r1, r2, r3))
+      return
+      end
+
+c Main combn function
+
+      subroutine combn (x, y, w, h, prob, xf, yf, orient, 
+     +     r0, r1, r2, r3)
+      integer x, y, w, h, prob, xf, yf, orient, r0, r1, r2, r3
+      if(ne(0,100) .LT. prob) then
+         if(orient .EQ. 1) then 
+            call combn1(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 2) then
+            call combn2(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 3) then
+            call combn3(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 4) then
+            call combn4(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 5) then 
+            call combn5(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 6) then  
+            call combn6(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 7) then  
+            call combn7(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+         if(orient .EQ. 8) then 
+            call combn8(x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+         endif
+      endif
+      return
+      end
+
+c combn
+c Cells are processed left-to-right, bottom-to-top
+
+      integer function combn0 (from, to, r0, r1, r2, r3)
+      integer from, to, r0, r1, r2, r3
+      integer rule, rr0, rr1, rr2, rr3
+      integer r
+      if(from .EQ. 0) rule = r0
+      if(from .EQ. 1) rule = r1
+      if(from .EQ. 2) rule = r2
+      if(from .EQ. 3) rule = r3
+      call n4n(rule, rr0, rr1, rr2, rr3)
+      if(to .EQ. 0) combn0 = rr0
+      if(to .EQ. 1) combn0 = rr1
+      if(to .EQ. 2) combn0 = rr2
+      if(to .EQ. 3) combn0 = rr3
+      return
+      end
+
+
+
+
+
+
+
+
+
+
+
+
+
+c  Rotate 90 degrees anticlockwise
+
+      subroutine combn4 (x, y, w, h, prob, xf, yf, r0, r1, r2, r3)
+      integer x, y, w, h, prob, xf, yf, r0, r1, r2, r3
+      integer left1, right1, bottom1, top1
+      integer left2, right2, bottom2, top2
+      integer i, j, n
+      call xywh(x, y, w, h, left1, right1, bottom1, top1)
+      call xywh(xf, yf, h, w, left2, right2, bottom2, top2)
+      do 1 i = 0, w
+         do 2 j = 0, h
+            if(prob .EQ. 100 .OR. ne(0,99) .LT. prob) then
+               n = numcombn(num(left1 + i, bottom1 + j),
+     +              num(left2 + j, top2 - i), r0, r1, r2, r3)
+               call put(left1 + i, bottom1 + j, n)
+            endif
+ 2       continue
+ 1    continue
+      return
+      end

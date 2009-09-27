@@ -1,0 +1,13 @@
+README
+------
+
+This is a re-implementation of Ken Knowlton's Mini Explor system described in
+two ACM papers -
+
+http://portal.acm.org/citation.cfm?id=807020
+http://portal.acm.org/citation.cfm?id=988052
+
+See the examples directory for examples.
+
+It's covered by the GPL but unless you distribute code written using it that
+won't affect your use of it.
