@@ -1,13 +1,15 @@
-#pkglib_LIBRARIES = libexplor.a
-#libexplor_a_SOURCES = mini-explor.f
-#libexplor_a_LIBADD = $(FLIBS)
+lib_LTLIBRARIES = libexplor.la
+libexplor_la_SOURCES = mini-explor.f
+libexplor_la_LDFLAGS = -shared -fPIC
 
 dist_bin_SCRIPTS = explor 
 CLEANFILES = $(bin_SCRIPTS)
 extra_dist = explor.in
-dist_pkgdata_DATA = mini-explor.f
+dist_pkgdata_DATA = mini-explor.f end.f
 
-explor_subst = sed -e 's,[@]pkgdatadir[@],$(pkgdatadir),g' \
+
+explor_subst = sed -e 's,[@]libdir[@],$(libdir),g' \
+	 	   -e 's,[@]pkgdatadir[@],$(pkgdatadir),g' \
 		   -e 's,[@]fortran[@],$(F77),g'
 
 explor: explor.in

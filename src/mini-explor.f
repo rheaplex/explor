@@ -540,3 +540,11 @@ c Main combn function
       endif
       return
       end
+
+
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c Initialise the library
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+      call initexplor
+      end

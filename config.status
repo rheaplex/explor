@@ -7,14 +7,16 @@
 debug=false
 ac_cs_recheck=false
 ac_cs_silent=false
+
 SHELL=${CONFIG_SHELL-/bin/sh}
-## --------------------- ##
-## M4sh Initialization.  ##
-## --------------------- ##
+export SHELL
+## -------------------- ##
+## M4sh Initialization. ##
+## -------------------- ##
 
 # Be more Bourne compatible
 DUALCASE=1; export DUALCASE # for MKS sh
-if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
+if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then :
   emulate sh
   NULLCMD=:
   # Pre-4.2 versions of Zsh do word splitting on ${1+"$@"}, which
@@ -22,22 +24,14 @@ if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
   alias -g '${1+"$@"}'='"$@"'
   setopt NO_GLOB_SUBST
 else
-  case `(set -o) 2>/dev/null` in
-  *posix*) set -o posix ;;
+  case `(set -o) 2>/dev/null` in #(
+  *posix*) :
+    set -o posix ;; #(
+  *) :
+     ;;
 esac
-
 fi
 
-
-
-
-# PATH needs CR
-# Avoid depending upon Character Ranges.
-as_cr_letters='abcdefghijklmnopqrstuvwxyz'
-as_cr_LETTERS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-as_cr_Letters=$as_cr_letters$as_cr_LETTERS
-as_cr_digits='0123456789'
-as_cr_alnum=$as_cr_Letters$as_cr_digits
 
 as_nl='
 '
@@ -46,7 +40,13 @@ export as_nl
 as_echo='\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\'
 as_echo=$as_echo$as_echo$as_echo$as_echo$as_echo
 as_echo=$as_echo$as_echo$as_echo$as_echo$as_echo$as_echo
-if (test "X`printf %s $as_echo`" = "X$as_echo") 2>/dev/null; then
+# Prefer a ksh shell builtin over an external printf program on Solaris,
+# but without wasting forks for bash or zsh.
+if test -z "$BASH_VERSION$ZSH_VERSION" \
+    && (test "X`print -r -- $as_echo`" = "X$as_echo") 2>/dev/null; then
+  as_echo='print -r --'
+  as_echo_n='print -rn --'
+elif (test "X`printf %s $as_echo`" = "X$as_echo") 2>/dev/null; then
   as_echo='printf %s\n'
   as_echo_n='printf %s'
 else
@@ -57,7 +57,7 @@ else
     as_echo_body='eval expr "X$1" : "X\\(.*\\)"'
     as_echo_n_body='eval
       arg=$1;
-      case $arg in
+      case $arg in #(
       *"$as_nl"*)
 	expr "X$arg" : "X\\(.*\\)$as_nl";
 	arg=`expr "X$arg" : ".*$as_nl\\(.*\\)"`;;
@@ -80,13 +80,6 @@ if test "${PATH_SEPARATOR+set}" != set; then
   }
 fi
 
-# Support unset when possible.
-if ( (MAIL=60; unset MAIL) || exit) >/dev/null 2>&1; then
-  as_unset=unset
-else
-  as_unset=false
-fi
-
 
 # IFS
 # We need space, tab and new line, in precisely that order.  Quoting is
@@ -96,15 +89,15 @@ fi
 IFS=" ""	$as_nl"
 
 # Find who we are.  Look in the path if we contain no directory separator.
-case $0 in
+case $0 in #((
   *[\\/]* ) as_myself=$0 ;;
   *) as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
   test -z "$as_dir" && as_dir=.
-  test -r "$as_dir/$0" && as_myself=$as_dir/$0 && break
-done
+    test -r "$as_dir/$0" && as_myself=$as_dir/$0 && break
+  done
 IFS=$as_save_IFS
 
      ;;
@@ -116,12 +109,16 @@ if test "x$as_myself" = x; then
 fi
 if test ! -f "$as_myself"; then
   $as_echo "$as_myself: error: cannot find myself; rerun with an absolute file name" >&2
-  { (exit 1); exit 1; }
+  exit 1
 fi
 
-# Work around bugs in pre-3.0 UWIN ksh.
-for as_var in ENV MAIL MAILPATH
-do ($as_unset $as_var) >/dev/null 2>&1 && $as_unset $as_var
+# Unset variables that we do not need and which cause bugs (e.g. in
+# pre-3.0 UWIN ksh).  But do not cause bugs in bash 2.01; the "|| exit 1"
+# suppresses any "Segmentation fault" message there.  '((' could
+# trigger a bug in pdksh 5.2.14.
+for as_var in BASH_ENV ENV MAIL MAILPATH
+do eval test x\${$as_var+set} = xset \
+  && ( (unset $as_var) || exit 1) >/dev/null 2>&1 && unset $as_var || :
 done
 PS1='$ '
 PS2='> '
@@ -133,7 +130,89 @@ export LC_ALL
 LANGUAGE=C
 export LANGUAGE
 
-# Required to use basename.
+# CDPATH.
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
+
+# as_fn_error STATUS ERROR [LINENO LOG_FD]
+# ----------------------------------------
+# Output "`basename $0`: error: ERROR" to stderr. If LINENO and LOG_FD are
+# provided, also output the error to LOG_FD, referencing LINENO. Then exit the
+# script with STATUS, using 1 if that was 0.
+as_fn_error ()
+{
+  as_status=$1; test $as_status -eq 0 && as_status=1
+  if test "$4"; then
+    as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+    $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
+  fi
+  $as_echo "$as_me: error: $2" >&2
+  as_fn_exit $as_status
+} # as_fn_error
+
+
+# as_fn_set_status STATUS
+# -----------------------
+# Set $? to STATUS, without forking.
+as_fn_set_status ()
+{
+  return $1
+} # as_fn_set_status
+
+# as_fn_exit STATUS
+# -----------------
+# Exit the shell with STATUS, even in a "trap 0" or "set -e" context.
+as_fn_exit ()
+{
+  set +e
+  as_fn_set_status $1
+  exit $1
+} # as_fn_exit
+
+# as_fn_unset VAR
+# ---------------
+# Portably unset VAR.
+as_fn_unset ()
+{
+  { eval $1=; unset $1;}
+}
+as_unset=as_fn_unset
+# as_fn_append VAR VALUE
+# ----------------------
+# Append the text in VALUE to the end of the definition contained in VAR. Take
+# advantage of any shell optimizations that allow amortized linear growth over
+# repeated appends, instead of the typical quadratic growth present in naive
+# implementations.
+if (eval "as_var=1; as_var+=2; test x\$as_var = x12") 2>/dev/null; then :
+  eval 'as_fn_append ()
+  {
+    eval $1+=\$2
+  }'
+else
+  as_fn_append ()
+  {
+    eval $1=\$$1\$2
+  }
+fi # as_fn_append
+
+# as_fn_arith ARG...
+# ------------------
+# Perform arithmetic evaluation on the ARGs, and store the result in the
+# global $as_val. Take advantage of shells that can avoid forks. The arguments
+# must be portable across $(()) and expr.
+if (eval "test \$(( 1 + 1 )) = 2") 2>/dev/null; then :
+  eval 'as_fn_arith ()
+  {
+    as_val=$(( $* ))
+  }'
+else
+  as_fn_arith ()
+  {
+    as_val=`expr "$@" || test $? -eq 1`
+  }
+fi # as_fn_arith
+
+
 if expr a : '\(a\)' >/dev/null 2>&1 &&
    test "X`expr 00001 : '.*\(...\)'`" = X001; then
   as_expr=expr
@@ -147,8 +226,12 @@ else
   as_basename=false
 fi
 
+if (as_dir=`dirname -- /` && test "X$as_dir" = X/) >/dev/null 2>&1; then
+  as_dirname=dirname
+else
+  as_dirname=false
+fi
 
-# Name of the executable.
 as_me=`$as_basename -- "$0" ||
 $as_expr X/"$0" : '.*/\([^/][^/]*\)/*$' \| \
 	 X"$0" : 'X\(//\)$' \| \
@@ -168,76 +251,25 @@ $as_echo X/"$0" |
 	  }
 	  s/.*/./; q'`
 
-# CDPATH.
-$as_unset CDPATH
-
-
-
-  as_lineno_1=$LINENO
-  as_lineno_2=$LINENO
-  test "x$as_lineno_1" != "x$as_lineno_2" &&
-  test "x`expr $as_lineno_1 + 1`" = "x$as_lineno_2" || {
-
-  # Create $as_me.lineno as a copy of $as_myself, but with $LINENO
-  # uniformly replaced by the line number.  The first 'sed' inserts a
-  # line-number line after each line using $LINENO; the second 'sed'
-  # does the real work.  The second script uses 'N' to pair each
-  # line-number line with the line containing $LINENO, and appends
-  # trailing '-' during substitution so that $LINENO is not a special
-  # case at line end.
-  # (Raja R Harinath suggested sed '=', and Paul Eggert wrote the
-  # scripts with optimization help from Paolo Bonzini.  Blame Lee
-  # E. McMahon (1931-1989) for sed's syntax.  :-)
-  sed -n '
-    p
-    /[$]LINENO/=
-  ' <$as_myself |
-    sed '
-      s/[$]LINENO.*/&-/
-      t lineno
-      b
-      :lineno
-      N
-      :loop
-      s/[$]LINENO\([^'$as_cr_alnum'_].*\n\)\(.*\)/\2\1\2/
-      t loop
-      s/-\n.*//
-    ' >$as_me.lineno &&
-  chmod +x "$as_me.lineno" ||
-    { $as_echo "$as_me: error: cannot create $as_me.lineno; rerun with a POSIX shell" >&2
-   { (exit 1); exit 1; }; }
-
-  # Don't try to exec as it changes $[0], causing all sort of problems
-  # (the dirname of $[0] is not the place where we might find the
-  # original and so on.  Autoconf is especially sensitive to this).
-  . "./$as_me.lineno"
-  # Exit status is that of the last command.
-  exit
-}
-
-
-if (as_dir=`dirname -- /` && test "X$as_dir" = X/) >/dev/null 2>&1; then
-  as_dirname=dirname
-else
-  as_dirname=false
-fi
+# Avoid depending upon Character Ranges.
+as_cr_letters='abcdefghijklmnopqrstuvwxyz'
+as_cr_LETTERS='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+as_cr_Letters=$as_cr_letters$as_cr_LETTERS
+as_cr_digits='0123456789'
+as_cr_alnum=$as_cr_Letters$as_cr_digits
 
 ECHO_C= ECHO_N= ECHO_T=
-case `echo -n x` in
+case `echo -n x` in #(((((
 -n*)
-  case `echo 'x\c'` in
+  case `echo 'xy\c'` in
   *c*) ECHO_T='	';;	# ECHO_T is single tab character.
-  *)   ECHO_C='\c';;
+  xy)  ECHO_C='\c';;
+  *)   echo `echo ksh88 bug on AIX 6.1` > /dev/null
+       ECHO_T='	';;
   esac;;
 *)
   ECHO_N='-n';;
 esac
-if expr a : '\(a\)' >/dev/null 2>&1 &&
-   test "X`expr 00001 : '.*\(...\)'`" = X001; then
-  as_expr=expr
-else
-  as_expr=false
-fi
 
 rm -f conf$$ conf$$.exe conf$$.file
 if test -d conf$$.dir; then
@@ -266,8 +298,56 @@ fi
 rm -f conf$$ conf$$.exe conf$$.dir/conf$$.file conf$$.file
 rmdir conf$$.dir 2>/dev/null
 
+
+# as_fn_mkdir_p
+# -------------
+# Create "$as_dir" as a directory, including parents if necessary.
+as_fn_mkdir_p ()
+{
+
+  case $as_dir in #(
+  -*) as_dir=./$as_dir;;
+  esac
+  test -d "$as_dir" || eval $as_mkdir_p || {
+    as_dirs=
+    while :; do
+      case $as_dir in #(
+      *\'*) as_qdir=`$as_echo "$as_dir" | sed "s/'/'\\\\\\\\''/g"`;; #'(
+      *) as_qdir=$as_dir;;
+      esac
+      as_dirs="'$as_qdir' $as_dirs"
+      as_dir=`$as_dirname -- "$as_dir" ||
+$as_expr X"$as_dir" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$as_dir" : 'X\(//\)[^/]' \| \
+	 X"$as_dir" : 'X\(//\)$' \| \
+	 X"$as_dir" : 'X\(/\)' \| . 2>/dev/null ||
+$as_echo X"$as_dir" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
+      test -d "$as_dir" && break
+    done
+    test -z "$as_dirs" || eval "mkdir $as_dirs"
+  } || test -d "$as_dir" || as_fn_error $? "cannot create directory $as_dir"
+
+
+} # as_fn_mkdir_p
 if mkdir -p . 2>/dev/null; then
-  as_mkdir_p=:
+  as_mkdir_p='mkdir -p "$as_dir"'
 else
   test -d ./-p && rmdir ./-p
   as_mkdir_p=false
@@ -286,10 +366,10 @@ else
       if test -d "$1"; then
 	test -d "$1/.";
       else
-	case $1 in
+	case $1 in #(
 	-*)set "./$1";;
 	esac;
-	case `ls -ld'$as_ls_L_option' "$1" 2>/dev/null` in
+	case `ls -ld'$as_ls_L_option' "$1" 2>/dev/null` in #((
 	???[sx]*):;;*)false;;esac;fi
     '\'' sh
   '
@@ -304,13 +384,15 @@ as_tr_sh="eval sed 'y%*+%pp%;s%[^_$as_cr_alnum]%_%g'"
 
 
 exec 6>&1
-
-# Save the log message, to keep $[0] and so on meaningful, and to
+## ----------------------------------- ##
+## Main body of $CONFIG_STATUS script. ##
+## ----------------------------------- ##
+# Save the log message, to keep $0 and so on meaningful, and to
 # report actual input values of CONFIG_FILES etc. instead of their
 # values after options handling.
 ac_log="
 This file was extended by $as_me, which was
-generated by GNU Autoconf 2.63.  Invocation command line was
+generated by GNU Autoconf 2.66.  Invocation command line was
 
   CONFIG_FILES    = $CONFIG_FILES
   CONFIG_HEADERS  = $CONFIG_HEADERS
@@ -323,15 +405,18 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 
 # Files that config.status was made for.
 config_files=" Makefile src/Makefile"
+config_commands=" depfiles libtool"
 
 ac_cs_usage="\
-\`$as_me' instantiates files from templates according to the
-current configuration.
+\`$as_me' instantiates files and other configuration actions
+from templates according to the current configuration.  Unless the files
+and actions are specified as TAGs, all are instantiated by default.
 
-Usage: $0 [OPTION]... [FILE]...
+Usage: $0 [OPTION]... [TAG]...
 
   -h, --help       print this help, then exit
   -V, --version    print version number and configuration settings, then exit
+      --config     print configuration, then exit
   -q, --quiet, --silent
                    do not print progress messages
   -d, --debug      don't remove temporary files
@@ -342,18 +427,22 @@ Usage: $0 [OPTION]... [FILE]...
 Configuration files:
 $config_files
 
-Report bugs to <bug-autoconf@gnu.org>."
+Configuration commands:
+$config_commands
 
+Report bugs to the package provider."
+
+ac_cs_config=""
 ac_cs_version="\
 config.status
-configured by ./configure, generated by GNU Autoconf 2.63,
-  with options \"\"
+configured by ./configure, generated by GNU Autoconf 2.66,
+  with options \"$ac_cs_config\"
 
-Copyright (C) 2008 Free Software Foundation, Inc.
+Copyright (C) 2010 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/robmyers/Desktop/explor'
+ac_pwd='/home/robmyers/projects/explor'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -382,6 +471,8 @@ do
     ac_cs_recheck=: ;;
   --version | --versio | --versi | --vers | --ver | --ve | --v | -V )
     $as_echo "$ac_cs_version"; exit ;;
+  --config | --confi | --conf | --con | --co | --c )
+    $as_echo "$ac_cs_config"; exit ;;
   --debug | --debu | --deb | --de | --d | -d )
     debug=: ;;
   --file | --fil | --fi | --f )
@@ -389,7 +480,7 @@ do
     case $ac_optarg in
     *\'*) ac_optarg=`$as_echo "$ac_optarg" | sed "s/'/'\\\\\\\\''/g"` ;;
     esac
-    CONFIG_FILES="$CONFIG_FILES '$ac_optarg'"
+    as_fn_append CONFIG_FILES " '$ac_optarg'"
     ac_need_defaults=false;;
   --he | --h |  --help | --hel | -h )
     $as_echo "$ac_cs_usage"; exit ;;
@@ -398,11 +489,10 @@ do
     ac_cs_silent=: ;;
 
   # This is an error.
-  -*) { $as_echo "$as_me: error: unrecognized option: $1
-Try \`$0 --help' for more information." >&2
-   { (exit 1); exit 1; }; } ;;
+  -*) as_fn_error $? "unrecognized option: \`$1'
+Try \`$0 --help' for more information." ;;
 
-  *) ac_config_targets="$ac_config_targets $1"
+  *) as_fn_append ac_config_targets " $1"
      ac_need_defaults=false ;;
 
   esac
@@ -434,17 +524,258 @@ _ASBOX
   $as_echo "$ac_log"
 } >&5
 
+#
+# INIT-COMMANDS
+#
+AMDEP_TRUE="" ac_aux_dir="."
+
+
+# The HP-UX ksh and POSIX shell print the target directory to stdout
+# if CDPATH is set.
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
+sed_quote_subst='s/\(["`$\\]\)/\\\1/g'
+double_quote_subst='s/\(["`\\]\)/\\\1/g'
+delay_variable_subst='s/\\\\\\\\\\\$/\\\\\\$/g'
+macro_version='2.2.10'
+macro_revision='1.3175'
+enable_shared='yes'
+enable_static='yes'
+pic_mode='default'
+enable_fast_install='yes'
+SHELL='/bin/sh'
+ECHO='printf %s\n'
+host_alias=''
+host='i686-pc-linux-gnu'
+host_os='linux-gnu'
+build_alias=''
+build='i686-pc-linux-gnu'
+build_os='linux-gnu'
+SED='/bin/sed'
+Xsed='/bin/sed -e 1s/^X//'
+GREP='/bin/grep'
+EGREP='/bin/grep -E'
+FGREP='/bin/grep -F'
+LD='/usr/bin/ld'
+NM='/usr/bin/nm -B'
+LN_S='ln -s'
+max_cmd_len='1572864'
+ac_objext='o'
+exeext=''
+lt_unset='unset'
+lt_SP2NL='tr \040 \012'
+lt_NL2SP='tr \015\012 \040\040'
+reload_flag=' -r'
+reload_cmds='$LD$reload_flag -o $output$reload_objs'
+OBJDUMP='objdump'
+deplibs_check_method='pass_all'
+file_magic_cmd='$MAGIC_CMD'
+AR='ar'
+AR_FLAGS='cru'
+STRIP='strip'
+RANLIB='ranlib'
+old_postinstall_cmds='chmod 644 $oldlib~$RANLIB $oldlib'
+old_postuninstall_cmds=''
+old_archive_cmds='$AR $AR_FLAGS $oldlib$oldobjs~$RANLIB $oldlib'
+lock_old_archive_extraction='no'
+CC='gcc'
+CFLAGS='-g -O2'
+compiler='gfortran'
+GCC='yes'
+lt_cv_sys_global_symbol_pipe='sed -n -e '\''s/^.*[	 ]\([ABCDGIRSTW][ABCDGIRSTW]*\)[	 ][	 ]*\([_A-Za-z][_A-Za-z0-9]*\)$/\1 \2 \2/p'\'''
+lt_cv_sys_global_symbol_to_cdecl='sed -n -e '\''s/^T .* \(.*\)$/extern int \1();/p'\'' -e '\''s/^[ABCDGIRSTW]* .* \(.*\)$/extern char \1;/p'\'''
+lt_cv_sys_global_symbol_to_c_name_address='sed -n -e '\''s/^: \([^ ]*\) $/  {\"\1\", (void *) 0},/p'\'' -e '\''s/^[ABCDGIRSTW]* \([^ ]*\) \([^ ]*\)$/  {"\2", (void *) \&\2},/p'\'''
+lt_cv_sys_global_symbol_to_c_name_address_lib_prefix='sed -n -e '\''s/^: \([^ ]*\) $/  {\"\1\", (void *) 0},/p'\'' -e '\''s/^[ABCDGIRSTW]* \([^ ]*\) \(lib[^ ]*\)$/  {"\2", (void *) \&\2},/p'\'' -e '\''s/^[ABCDGIRSTW]* \([^ ]*\) \([^ ]*\)$/  {"lib\2", (void *) \&\2},/p'\'''
+objdir='.libs'
+MAGIC_CMD='file'
+lt_prog_compiler_no_builtin_flag=' -fno-builtin'
+lt_prog_compiler_wl='-Wl,'
+lt_prog_compiler_pic=' -fPIC -DPIC'
+lt_prog_compiler_static=''
+lt_cv_prog_compiler_c_o='yes'
+need_locks='no'
+DSYMUTIL=''
+NMEDIT=''
+LIPO=''
+OTOOL=''
+OTOOL64=''
+libext='a'
+shrext_cmds='.so'
+extract_expsyms_cmds=''
+archive_cmds_need_lc='no'
+enable_shared_with_static_runtimes='no'
+export_dynamic_flag_spec='${wl}--export-dynamic'
+whole_archive_flag_spec='${wl}--whole-archive$convenience ${wl}--no-whole-archive'
+compiler_needs_object='no'
+old_archive_from_new_cmds=''
+old_archive_from_expsyms_cmds=''
+archive_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+archive_expsym_cmds='echo "{ global:" > $output_objdir/$libname.ver~
+	    cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $output_objdir/$libname.ver~
+	    echo "local: *; };" >> $output_objdir/$libname.ver~
+	    $CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-version-script ${wl}$output_objdir/$libname.ver -o $lib'
+module_cmds=''
+module_expsym_cmds=''
+with_gnu_ld='yes'
+allow_undefined_flag=''
+no_undefined_flag=''
+hardcode_libdir_flag_spec='${wl}-rpath ${wl}$libdir'
+hardcode_libdir_flag_spec_ld=''
+hardcode_libdir_separator=''
+hardcode_direct='no'
+hardcode_direct_absolute='no'
+hardcode_minus_L='no'
+hardcode_shlibpath_var='unsupported'
+hardcode_automatic='no'
+inherit_rpath='no'
+link_all_deplibs='unknown'
+fix_srcfile_path=''
+always_export_symbols='no'
+export_symbols_cmds='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+exclude_expsyms='_GLOBAL_OFFSET_TABLE_|_GLOBAL__F[ID]_.*'
+include_expsyms=''
+prelink_cmds=''
+file_list_spec=''
+variables_saved_for_relink='PATH LD_LIBRARY_PATH LD_RUN_PATH GCC_EXEC_PREFIX COMPILER_PATH LIBRARY_PATH'
+need_lib_prefix='no'
+need_version='no'
+version_type='linux'
+runpath_var='LD_RUN_PATH'
+shlibpath_var='LD_LIBRARY_PATH'
+shlibpath_overrides_runpath='no'
+libname_spec='lib$name'
+library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
+soname_spec='${libname}${release}${shared_ext}$major'
+install_override_mode=''
+postinstall_cmds=''
+postuninstall_cmds=''
+finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
+finish_eval=''
+hardcode_into_libs='yes'
+sys_lib_search_path_spec='/usr/lib/gcc/i686-redhat-linux/4.5.1 /usr/lib /lib '
+sys_lib_dlsearch_path_spec='/lib64 /usr/lib64 /lib /usr/lib /usr/lib/R/lib /usr/lib/atlas /usr/lib/mysql /usr/lib/tcl8.5 /usr/lib/xulrunner-1.9.2 '
+hardcode_action='immediate'
+enable_dlopen='unknown'
+enable_dlopen_self='unknown'
+enable_dlopen_self_static='unknown'
+old_striplib='strip --strip-debug'
+striplib='strip --strip-unneeded'
+LD_F77='/usr/bin/ld'
+reload_flag_F77=' -r'
+reload_cmds_F77='$LD$reload_flag -o $output$reload_objs'
+old_archive_cmds_F77='$AR $AR_FLAGS $oldlib$oldobjs~$RANLIB $oldlib'
+compiler_F77='gfortran'
+GCC_F77='yes'
+lt_prog_compiler_no_builtin_flag_F77=''
+lt_prog_compiler_wl_F77='-Wl,'
+lt_prog_compiler_pic_F77=' -fPIC'
+lt_prog_compiler_static_F77=''
+lt_cv_prog_compiler_c_o_F77='yes'
+archive_cmds_need_lc_F77='no'
+enable_shared_with_static_runtimes_F77='no'
+export_dynamic_flag_spec_F77='${wl}--export-dynamic'
+whole_archive_flag_spec_F77='${wl}--whole-archive$convenience ${wl}--no-whole-archive'
+compiler_needs_object_F77='no'
+old_archive_from_new_cmds_F77=''
+old_archive_from_expsyms_cmds_F77=''
+archive_cmds_F77='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
+archive_expsym_cmds_F77='echo "{ global:" > $output_objdir/$libname.ver~
+	    cat $export_symbols | sed -e "s/\(.*\)/\1;/" >> $output_objdir/$libname.ver~
+	    echo "local: *; };" >> $output_objdir/$libname.ver~
+	    $CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname ${wl}-version-script ${wl}$output_objdir/$libname.ver -o $lib'
+module_cmds_F77=''
+module_expsym_cmds_F77=''
+with_gnu_ld_F77='yes'
+allow_undefined_flag_F77=''
+no_undefined_flag_F77=''
+hardcode_libdir_flag_spec_F77='${wl}-rpath ${wl}$libdir'
+hardcode_libdir_flag_spec_ld_F77=''
+hardcode_libdir_separator_F77=''
+hardcode_direct_F77='no'
+hardcode_direct_absolute_F77='no'
+hardcode_minus_L_F77='no'
+hardcode_shlibpath_var_F77='unsupported'
+hardcode_automatic_F77='no'
+inherit_rpath_F77='no'
+link_all_deplibs_F77='unknown'
+fix_srcfile_path_F77=''
+always_export_symbols_F77='no'
+export_symbols_cmds_F77='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
+exclude_expsyms_F77='_GLOBAL_OFFSET_TABLE_|_GLOBAL__F[ID]_.*'
+include_expsyms_F77=''
+prelink_cmds_F77=''
+file_list_spec_F77=''
+hardcode_action_F77='immediate'
+
+LTCC='gcc'
+LTCFLAGS='-g -O2'
+compiler='gcc'
+
+# A function that is used when there is no print builtin or printf.
+func_fallback_echo ()
+{
+  eval 'cat <<_LTECHO_EOF
+$1
+_LTECHO_EOF'
+}
+
+# Quote evaled strings.
+for var in SHELL ECHO SED GREP EGREP FGREP LD NM LN_S lt_SP2NL lt_NL2SP reload_flag OBJDUMP deplibs_check_method file_magic_cmd AR AR_FLAGS STRIP RANLIB CC CFLAGS compiler lt_cv_sys_global_symbol_pipe lt_cv_sys_global_symbol_to_cdecl lt_cv_sys_global_symbol_to_c_name_address lt_cv_sys_global_symbol_to_c_name_address_lib_prefix lt_prog_compiler_no_builtin_flag lt_prog_compiler_wl lt_prog_compiler_pic lt_prog_compiler_static lt_cv_prog_compiler_c_o need_locks DSYMUTIL NMEDIT LIPO OTOOL OTOOL64 shrext_cmds export_dynamic_flag_spec whole_archive_flag_spec compiler_needs_object with_gnu_ld allow_undefined_flag no_undefined_flag hardcode_libdir_flag_spec hardcode_libdir_flag_spec_ld hardcode_libdir_separator fix_srcfile_path exclude_expsyms include_expsyms file_list_spec variables_saved_for_relink libname_spec library_names_spec soname_spec install_override_mode finish_eval old_striplib striplib LD_F77 reload_flag_F77 compiler_F77 lt_prog_compiler_no_builtin_flag_F77 lt_prog_compiler_wl_F77 lt_prog_compiler_pic_F77 lt_prog_compiler_static_F77 lt_cv_prog_compiler_c_o_F77 export_dynamic_flag_spec_F77 whole_archive_flag_spec_F77 compiler_needs_object_F77 with_gnu_ld_F77 allow_undefined_flag_F77 no_undefined_flag_F77 hardcode_libdir_flag_spec_F77 hardcode_libdir_flag_spec_ld_F77 hardcode_libdir_separator_F77 fix_srcfile_path_F77 exclude_expsyms_F77 include_expsyms_F77 file_list_spec_F77; do
+    case `eval \\$ECHO \\""\\$$var"\\"` in
+    *[\\\`\"\$]*)
+      eval "lt_$var=\\\"\`\$ECHO \"\$$var\" | \$SED \"\$sed_quote_subst\"\`\\\""
+      ;;
+    *)
+      eval "lt_$var=\\\"\$$var\\\""
+      ;;
+    esac
+done
+
+# Double-quote double-evaled strings.
+for var in reload_cmds old_postinstall_cmds old_postuninstall_cmds old_archive_cmds extract_expsyms_cmds old_archive_from_new_cmds old_archive_from_expsyms_cmds archive_cmds archive_expsym_cmds module_cmds module_expsym_cmds export_symbols_cmds prelink_cmds postinstall_cmds postuninstall_cmds finish_cmds sys_lib_search_path_spec sys_lib_dlsearch_path_spec reload_cmds_F77 old_archive_cmds_F77 old_archive_from_new_cmds_F77 old_archive_from_expsyms_cmds_F77 archive_cmds_F77 archive_expsym_cmds_F77 module_cmds_F77 module_expsym_cmds_F77 export_symbols_cmds_F77 prelink_cmds_F77; do
+    case `eval \\$ECHO \\""\\$$var"\\"` in
+    *[\\\`\"\$]*)
+      eval "lt_$var=\\\"\`\$ECHO \"\$$var\" | \$SED -e \"\$double_quote_subst\" -e \"\$sed_quote_subst\" -e \"\$delay_variable_subst\"\`\\\""
+      ;;
+    *)
+      eval "lt_$var=\\\"\$$var\\\""
+      ;;
+    esac
+done
+
+ac_aux_dir='.'
+xsi_shell='yes'
+lt_shell_append='yes'
+
+# See if we are running on zsh, and set the options which allow our
+# commands through without removal of \ escapes INIT.
+if test -n "${ZSH_VERSION+set}" ; then
+   setopt NO_GLOB_SUBST
+fi
+
+
+    PACKAGE='explor'
+    VERSION='0.1'
+    TIMESTAMP=''
+    RM='rm -f'
+    ofile='libtool'
+
+
+
+
+
+
 
 # Handling of arguments.
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
+    "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
+    "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
 
-  *) { { $as_echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
-$as_echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
-   { (exit 1); exit 1; }; };;
+  *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
 done
 
@@ -455,6 +786,7 @@ done
 # bizarre bug on SunOS 4.1.3.
 if $ac_need_defaults; then
   test "${CONFIG_FILES+set}" = set || CONFIG_FILES=$config_files
+  test "${CONFIG_COMMANDS+set}" = set || CONFIG_COMMANDS=$config_commands
 fi
 
 # Have a temporary directory for convenience.  Make it in the build tree
@@ -469,7 +801,7 @@ $debug ||
   trap 'exit_status=$?
   { test -z "$tmp" || test ! -d "$tmp" || rm -fr "$tmp"; } && exit $exit_status
 ' 0
-  trap '{ (exit 1); exit 1; }' 1 2 13 15
+  trap 'as_fn_exit 1' 1 2 13 15
 }
 # Create a (secure) tmp directory for tmp files.
 
@@ -480,11 +812,7 @@ $debug ||
 {
   tmp=./conf$$-$RANDOM
   (umask 077 && mkdir "$tmp")
-} ||
-{
-   $as_echo "$as_me: cannot create a temporary directory in ." >&2
-   { (exit 1); exit 1; }
-}
+} || as_fn_error $? "cannot create a temporary directory in ." "$LINENO" 5
 
 # Set up the scripts for CONFIG_FILES section.
 # No need to generate them if there are no CONFIG_FILES.
@@ -492,7 +820,13 @@ $debug ||
 if test -n "$CONFIG_FILES"; then
 
 
-ac_cr=''
+ac_cr=`echo X | tr X '\015'`
+# On cygwin, bash can eat \r inside `` if the user requested igncr.
+# But we know of no other shell where ac_cr would be empty at this
+# point, so we can use a bashism as a fallback.
+if test "x$ac_cr" = x; then
+  eval ac_cr=\$\'\\r\'
+fi
 ac_cs_awk_cr=`$AWK 'BEGIN { print "a\rb" }' </dev/null 2>/dev/null`
 if test "$ac_cs_awk_cr" = "a${ac_cr}b"; then
   ac_cs_awk_cr='\\r'
@@ -506,30 +840,69 @@ S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
-S["FLIBS"]=" -L/usr/lib/gcc/i586-redhat-linux/4.4.1 -L/usr/lib/gcc/i586-redhat-linux/4.4.1/../../.. -lgfortranbegin -lgfortran -lm"
-S["OBJEXT"]="o"
-S["EXEEXT"]=""
+S["FLIBS"]=" -L/usr/lib/gcc/i686-redhat-linux/4.5.1 -L/usr/lib/gcc/i686-redhat-linux/4.5.1/../../.. -lgfortran -lm"
 S["ac_ct_F77"]="gfortran"
-S["LDFLAGS"]=""
 S["FFLAGS"]="-g -O2"
 S["F77"]="gfortran"
+S["CPP"]="gcc -E"
+S["OTOOL64"]=""
+S["OTOOL"]=""
+S["LIPO"]=""
+S["NMEDIT"]=""
+S["DSYMUTIL"]=""
 S["RANLIB"]="ranlib"
+S["AR"]="ar"
+S["OBJDUMP"]="objdump"
+S["LN_S"]="ln -s"
+S["NM"]="/usr/bin/nm -B"
+S["ac_ct_DUMPBIN"]=""
+S["DUMPBIN"]=""
+S["LD"]="/usr/bin/ld"
+S["FGREP"]="/bin/grep -F"
+S["EGREP"]="/bin/grep -E"
+S["GREP"]="/bin/grep"
+S["SED"]="/bin/sed"
+S["am__fastdepCC_FALSE"]=""
+S["am__fastdepCC_TRUE"]="#"
+S["CCDEPMODE"]="depmode=none"
+S["AMDEPBACKSLASH"]="\\"
+S["AMDEP_FALSE"]="#"
+S["AMDEP_TRUE"]=""
+S["am__quote"]=""
+S["am__include"]="include"
+S["DEPDIR"]=".deps"
+S["OBJEXT"]="o"
+S["EXEEXT"]=""
+S["ac_ct_CC"]="gcc"
+S["CPPFLAGS"]=""
+S["LDFLAGS"]=""
+S["CFLAGS"]="-g -O2"
+S["CC"]="gcc"
+S["host_os"]="linux-gnu"
+S["host_vendor"]="pc"
+S["host_cpu"]="i686"
+S["host"]="i686-pc-linux-gnu"
+S["build_os"]="linux-gnu"
+S["build_vendor"]="pc"
+S["build_cpu"]="i686"
+S["build"]="i686-pc-linux-gnu"
+S["LIBTOOL"]="$(SHELL) $(top_builddir)/libtool"
 S["am__untar"]="${AMTAR} xf -"
 S["am__tar"]="${AMTAR} chof - \"$$tardir\""
-S["AMTAR"]="${SHELL} /home/robmyers/Desktop/explor/missing --run tar"
+S["AMTAR"]="${SHELL} /home/robmyers/projects/explor/missing --run tar"
 S["am__leading_dot"]="."
 S["SET_MAKE"]=""
 S["AWK"]="gawk"
 S["mkdir_p"]="/bin/mkdir -p"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
-S["STRIP"]=""
-S["install_sh"]="${SHELL} /home/robmyers/Desktop/explor/install-sh"
-S["MAKEINFO"]="${SHELL} /home/robmyers/Desktop/explor/missing --run makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/robmyers/Desktop/explor/missing --run autoheader"
-S["AUTOMAKE"]="${SHELL} /home/robmyers/Desktop/explor/missing --run automake-1.11"
-S["AUTOCONF"]="${SHELL} /home/robmyers/Desktop/explor/missing --run autoconf"
-S["ACLOCAL"]="${SHELL} /home/robmyers/Desktop/explor/missing --run aclocal-1.11"
+S["STRIP"]="strip"
+S["install_sh"]="${SHELL} /home/robmyers/projects/explor/install-sh"
+S["MAKEINFO"]="${SHELL} /home/robmyers/projects/explor/missing --run makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/robmyers/projects/explor/missing --run autoheader"
+S["AUTOMAKE"]="${SHELL} /home/robmyers/projects/explor/missing --run automake-1.11"
+S["AUTOCONF"]="${SHELL} /home/robmyers/projects/explor/missing --run autoconf"
+S["ACLOCAL"]="${SHELL} /home/robmyers/projects/explor/missing --run aclocal-1.11"
 S["VERSION"]="0.1"
 S["PACKAGE"]="explor"
 S["CYGPATH_W"]="echo"
@@ -544,8 +917,9 @@ S["LIBS"]=""
 S["ECHO_T"]=""
 S["ECHO_N"]="-n"
 S["ECHO_C"]=""
-S["DEFS"]="-DPACKAGE_NAME=\\\"\\\" -DPACKAGE_TARNAME=\\\"\\\" -DPACKAGE_VERSION=\\\"\\\" -DPACKAGE_STRING=\\\"\\\" -DPACKAGE_BUGREPORT=\\\"\\\" -DPACKAGE=\\\"explor\\\" -DVERSION=\\\"0."\
-"1\\\""
+S["DEFS"]="-DPACKAGE_NAME=\\\"\\\" -DPACKAGE_TARNAME=\\\"\\\" -DPACKAGE_VERSION=\\\"\\\" -DPACKAGE_STRING=\\\"\\\" -DPACKAGE_BUGREPORT=\\\"\\\" -DPACKAGE_URL=\\\"\\\" -DPACKAGE=\\\"expl"\
+"or\\\" -DVERSION=\\\"0.1\\\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRING"\
+"S_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\\\".libs/\\\""
 S["mandir"]="${datarootdir}/man"
 S["localedir"]="${datarootdir}/locale"
 S["libdir"]="${exec_prefix}/lib"
@@ -568,6 +942,7 @@ S["bindir"]="${exec_prefix}/bin"
 S["program_transform_name"]="s,x,x,"
 S["prefix"]="/usr/local"
 S["exec_prefix"]="${prefix}"
+S["PACKAGE_URL"]=""
 S["PACKAGE_BUGREPORT"]=""
 S["PACKAGE_STRING"]=""
 S["PACKAGE_VERSION"]=""
@@ -607,13 +982,11 @@ if sed "s/$ac_cr//" < /dev/null > /dev/null 2>&1; then
 else
   cat
 fi < "$tmp/subs1.awk" > "$tmp/subs.awk" \
-  || { { $as_echo "$as_me:$LINENO: error: could not setup config files machinery" >&5
-$as_echo "$as_me: error: could not setup config files machinery" >&2;}
-   { (exit 1); exit 1; }; }
+  || as_fn_error $? "could not setup config files machinery" "$LINENO" 5
 fi # test -n "$CONFIG_FILES"
 
 
-eval set X "  :F $CONFIG_FILES      "
+eval set X "  :F $CONFIG_FILES      :C $CONFIG_COMMANDS"
 shift
 for ac_tag
 do
@@ -622,9 +995,7 @@ do
   esac
   case $ac_mode$ac_tag in
   :[FHL]*:*);;
-  :L* | :C*:*) { { $as_echo "$as_me:$LINENO: error: invalid tag $ac_tag" >&5
-$as_echo "$as_me: error: invalid tag $ac_tag" >&2;}
-   { (exit 1); exit 1; }; };;
+  :L* | :C*:*) as_fn_error $? "invalid tag \`$ac_tag'" "$LINENO" 5;;
   :[FH]-) ac_tag=-:-;;
   :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
   esac
@@ -652,12 +1023,10 @@ $as_echo "$as_me: error: invalid tag $ac_tag" >&2;}
 	   [\\/$]*) false;;
 	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
 	   esac ||
-	   { { $as_echo "$as_me:$LINENO: error: cannot find input file: $ac_f" >&5
-$as_echo "$as_me: error: cannot find input file: $ac_f" >&2;}
-   { (exit 1); exit 1; }; };;
+	   as_fn_error 1 "cannot find input file: \`$ac_f'" "$LINENO" 5;;
       esac
       case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
-      ac_file_inputs="$ac_file_inputs '$ac_f'"
+      as_fn_append ac_file_inputs " '$ac_f'"
     done
 
     # Let's still pretend it is `configure' which instantiates (i.e., don't
@@ -668,7 +1037,7 @@ $as_echo "$as_me: error: cannot find input file: $ac_f" >&2;}
 	`' by configure.'
     if test x"$ac_file" != x-; then
       configure_input="$ac_file.  $configure_input"
-      { $as_echo "$as_me:$LINENO: creating $ac_file" >&5
+      { $as_echo "$as_me:${as_lineno-$LINENO}: creating $ac_file" >&5
 $as_echo "$as_me: creating $ac_file" >&6;}
     fi
     # Neutralize special characters interpreted by sed in replacement strings.
@@ -681,9 +1050,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
 
     case $ac_tag in
     *:-:* | *:-) cat >"$tmp/stdin" \
-      || { { $as_echo "$as_me:$LINENO: error: could not create $ac_file" >&5
-$as_echo "$as_me: error: could not create $ac_file" >&2;}
-   { (exit 1); exit 1; }; } ;;
+      || as_fn_error $? "could not create $ac_file" "$LINENO" 5 ;;
     esac
     ;;
   esac
@@ -711,47 +1078,7 @@ $as_echo X"$ac_file" |
 	    q
 	  }
 	  s/.*/./; q'`
-  { as_dir="$ac_dir"
-  case $as_dir in #(
-  -*) as_dir=./$as_dir;;
-  esac
-  test -d "$as_dir" || { $as_mkdir_p && mkdir -p "$as_dir"; } || {
-    as_dirs=
-    while :; do
-      case $as_dir in #(
-      *\'*) as_qdir=`$as_echo "$as_dir" | sed "s/'/'\\\\\\\\''/g"`;; #'(
-      *) as_qdir=$as_dir;;
-      esac
-      as_dirs="'$as_qdir' $as_dirs"
-      as_dir=`$as_dirname -- "$as_dir" ||
-$as_expr X"$as_dir" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
-	 X"$as_dir" : 'X\(//\)[^/]' \| \
-	 X"$as_dir" : 'X\(//\)$' \| \
-	 X"$as_dir" : 'X\(/\)' \| . 2>/dev/null ||
-$as_echo X"$as_dir" |
-    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
-	    s//\1/
-	    q
-	  }
-	  /^X\(\/\/\)[^/].*/{
-	    s//\1/
-	    q
-	  }
-	  /^X\(\/\/\)$/{
-	    s//\1/
-	    q
-	  }
-	  /^X\(\/\).*/{
-	    s//\1/
-	    q
-	  }
-	  s/.*/./; q'`
-      test -d "$as_dir" && break
-    done
-    test -z "$as_dirs" || eval "mkdir $as_dirs"
-  } || test -d "$as_dir" || { { $as_echo "$as_me:$LINENO: error: cannot create directory $as_dir" >&5
-$as_echo "$as_me: error: cannot create directory $as_dir" >&2;}
-   { (exit 1); exit 1; }; }; }
+  as_dir="$ac_dir"; as_fn_mkdir_p
   ac_builddir=.
 
 case "$ac_dir" in
@@ -805,7 +1132,6 @@ ac_abs_srcdir=$ac_abs_top_srcdir$ac_dir_suffix
 # If the template does not know about datarootdir, expand it.
 # FIXME: This hack should be removed a few years after 2.60.
 ac_datarootdir_hack=; ac_datarootdir_seen=
-
 ac_sed_dataroot='
 /datarootdir/ {
   p
@@ -815,12 +1141,11 @@ ac_sed_dataroot='
 /@docdir@/p
 /@infodir@/p
 /@localedir@/p
-/@mandir@/p
-'
+/@mandir@/p'
 case `eval "sed -n \"\$ac_sed_dataroot\" $ac_file_inputs"` in
 *datarootdir*) ac_datarootdir_seen=yes;;
 *@datadir@*|*@docdir@*|*@infodir@*|*@localedir@*|*@mandir@*)
-  { $as_echo "$as_me:$LINENO: WARNING: $ac_file_inputs seems to ignore the --datarootdir setting" >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $ac_file_inputs seems to ignore the --datarootdir setting" >&5
 $as_echo "$as_me: WARNING: $ac_file_inputs seems to ignore the --datarootdir setting" >&2;}
   ac_datarootdir_hack='
   s&@datadir@&${datarootdir}&g
@@ -828,14 +1153,22 @@ $as_echo "$as_me: WARNING: $ac_file_inputs seems to ignore the --datarootdir set
   s&@infodir@&${datarootdir}/info&g
   s&@localedir@&${datarootdir}/locale&g
   s&@mandir@&${datarootdir}/man&g
-    s&\${datarootdir}&${prefix}/share&g' ;;
+  s&\${datarootdir}&${prefix}/share&g' ;;
 esac
-ac_sed_extra="/^[	 ]*VPATH[	 ]*=/{
-s/:*\$(srcdir):*/:/
-s/:*\${srcdir}:*/:/
-s/:*@srcdir@:*/:/
-s/^\([^=]*=[	 ]*\):*/\1/
+ac_sed_extra="/^[	 ]*VPATH[	 ]*=[	 ]*/{
+h
+s///
+s/^/:/
+s/[	 ]*$/:/
+s/:\$(srcdir):/:/g
+s/:\${srcdir}:/:/g
+s/:@srcdir@:/:/g
+s/^:*//
 s/:*$//
+x
+s/\(=[	 ]*\).*/\1/
+G
+s/\n//
 s/^[^=]*=[	 ]*$//
 }
 
@@ -856,33 +1189,913 @@ s&@MKDIR_P@&$ac_MKDIR_P&;t t
 $ac_datarootdir_hack
 "
 eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$tmp/subs.awk" >$tmp/out \
-  || { { $as_echo "$as_me:$LINENO: error: could not create $ac_file" >&5
-$as_echo "$as_me: error: could not create $ac_file" >&2;}
-   { (exit 1); exit 1; }; }
+  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
 
 test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
   { ac_out=`sed -n '/^[	 ]*datarootdir[	 ]*:*=/p' "$tmp/out"`; test -z "$ac_out"; } &&
-  { $as_echo "$as_me:$LINENO: WARNING: $ac_file contains a reference to the variable \`datarootdir'
-which seems to be undefined.  Please make sure it is defined." >&5
+  { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $ac_file contains a reference to the variable \`datarootdir'
+which seems to be undefined.  Please make sure it is defined" >&5
 $as_echo "$as_me: WARNING: $ac_file contains a reference to the variable \`datarootdir'
-which seems to be undefined.  Please make sure it is defined." >&2;}
+which seems to be undefined.  Please make sure it is defined" >&2;}
 
   rm -f "$tmp/stdin"
   case $ac_file in
   -) cat "$tmp/out" && rm -f "$tmp/out";;
   *) rm -f "$ac_file" && mv "$tmp/out" "$ac_file";;
   esac \
-  || { { $as_echo "$as_me:$LINENO: error: could not create $ac_file" >&5
-$as_echo "$as_me: error: could not create $ac_file" >&2;}
-   { (exit 1); exit 1; }; }
+  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
  ;;
 
 
-
+  :C)  { $as_echo "$as_me:${as_lineno-$LINENO}: executing $ac_file commands" >&5
+$as_echo "$as_me: executing $ac_file commands" >&6;}
+ ;;
   esac
 
+
+  case $ac_file$ac_mode in
+    "depfiles":C) test x"$AMDEP_TRUE" != x"" || {
+  # Autoconf 2.62 quotes --file arguments for eval, but not when files
+  # are listed without --file.  Let's play safe and only enable the eval
+  # if we detect the quoting.
+  case $CONFIG_FILES in
+  *\'*) eval set x "$CONFIG_FILES" ;;
+  *)   set x $CONFIG_FILES ;;
+  esac
+  shift
+  for mf
+  do
+    # Strip MF so we end up with the name of the file.
+    mf=`echo "$mf" | sed -e 's/:.*$//'`
+    # Check whether this is an Automake generated Makefile or not.
+    # We used to match only the files named `Makefile.in', but
+    # some people rename them; so instead we look at the file content.
+    # Grep'ing the first line is not enough: some people post-process
+    # each Makefile.in and add a new line on top of each file to say so.
+    # Grep'ing the whole file is not good either: AIX grep has a line
+    # limit of 2048, but all sed's we know have understand at least 4000.
+    if sed -n 's,^#.*generated by automake.*,X,p' "$mf" | grep X >/dev/null 2>&1; then
+      dirpart=`$as_dirname -- "$mf" ||
+$as_expr X"$mf" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$mf" : 'X\(//\)[^/]' \| \
+	 X"$mf" : 'X\(//\)$' \| \
+	 X"$mf" : 'X\(/\)' \| . 2>/dev/null ||
+$as_echo X"$mf" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
+    else
+      continue
+    fi
+    # Extract the definition of DEPDIR, am__include, and am__quote
+    # from the Makefile without running `make'.
+    DEPDIR=`sed -n 's/^DEPDIR = //p' < "$mf"`
+    test -z "$DEPDIR" && continue
+    am__include=`sed -n 's/^am__include = //p' < "$mf"`
+    test -z "am__include" && continue
+    am__quote=`sed -n 's/^am__quote = //p' < "$mf"`
+    # When using ansi2knr, U may be empty or an underscore; expand it
+    U=`sed -n 's/^U = //p' < "$mf"`
+    # Find all dependency output files, they are included files with
+    # $(DEPDIR) in their names.  We invoke sed twice because it is the
+    # simplest approach to changing $(DEPDIR) to its actual value in the
+    # expansion.
+    for file in `sed -n "
+      s/^$am__include $am__quote\(.*(DEPDIR).*\)$am__quote"'$/\1/p' <"$mf" | \
+	 sed -e 's/\$(DEPDIR)/'"$DEPDIR"'/g' -e 's/\$U/'"$U"'/g'`; do
+      # Make sure the directory exists.
+      test -f "$dirpart/$file" && continue
+      fdir=`$as_dirname -- "$file" ||
+$as_expr X"$file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$file" : 'X\(//\)[^/]' \| \
+	 X"$file" : 'X\(//\)$' \| \
+	 X"$file" : 'X\(/\)' \| . 2>/dev/null ||
+$as_echo X"$file" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
+      as_dir=$dirpart/$fdir; as_fn_mkdir_p
+      # echo "creating $dirpart/$file"
+      echo '# dummy' > "$dirpart/$file"
+    done
+  done
+}
+ ;;
+    "libtool":C)
+
+    # See if we are running on zsh, and set the options which allow our
+    # commands through without removal of \ escapes.
+    if test -n "${ZSH_VERSION+set}" ; then
+      setopt NO_GLOB_SUBST
+    fi
+
+    cfgfile="${ofile}T"
+    trap "$RM \"$cfgfile\"; exit 1" 1 2 15
+    $RM "$cfgfile"
+
+    cat <<_LT_EOF >> "$cfgfile"
+#! $SHELL
+
+# `$ECHO "$ofile" | sed 's%^.*/%%'` - Provide generalized library-building support services.
+# Generated automatically by $as_me ($PACKAGE$TIMESTAMP) $VERSION
+# Libtool was configured on host `(hostname || uname -n) 2>/dev/null | sed 1q`:
+# NOTE: Changes made to this file will be lost: look at ltmain.sh.
+#
+#   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
+#                 2006, 2007, 2008, 2009, 2010 Free Software Foundation,
+#                 Inc.
+#   Written by Gordon Matzigkeit, 1996
+#
+#   This file is part of GNU Libtool.
+#
+# GNU Libtool is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of
+# the License, or (at your option) any later version.
+#
+# As a special exception to the GNU General Public License,
+# if you distribute this file as part of a program or library that
+# is built using GNU Libtool, you may include this file under the
+# same distribution terms that you use for the rest of that program.
+#
+# GNU Libtool is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Libtool; see the file COPYING.  If not, a copy
+# can be downloaded from http://www.gnu.org/licenses/gpl.html, or
+# obtained by writing to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+
+# The names of the tagged configurations supported by this script.
+available_tags="F77 "
+
+# ### BEGIN LIBTOOL CONFIG
+
+# Which release of libtool.m4 was used?
+macro_version=$macro_version
+macro_revision=$macro_revision
+
+# Whether or not to build shared libraries.
+build_libtool_libs=$enable_shared
+
+# Whether or not to build static libraries.
+build_old_libs=$enable_static
+
+# What type of objects to build.
+pic_mode=$pic_mode
+
+# Whether or not to optimize for fast installation.
+fast_install=$enable_fast_install
+
+# Shell to use when invoking shell scripts.
+SHELL=$lt_SHELL
+
+# An echo program that protects backslashes.
+ECHO=$lt_ECHO
+
+# The host system.
+host_alias=$host_alias
+host=$host
+host_os=$host_os
+
+# The build system.
+build_alias=$build_alias
+build=$build
+build_os=$build_os
+
+# A sed program that does not truncate output.
+SED=$lt_SED
+
+# Sed that helps us avoid accidentally triggering echo(1) options like -n.
+Xsed="\$SED -e 1s/^X//"
+
+# A grep program that handles long lines.
+GREP=$lt_GREP
+
+# An ERE matcher.
+EGREP=$lt_EGREP
+
+# A literal string matcher.
+FGREP=$lt_FGREP
+
+# A BSD- or MS-compatible name lister.
+NM=$lt_NM
+
+# Whether we need soft or hard links.
+LN_S=$lt_LN_S
+
+# What is the maximum length of a command?
+max_cmd_len=$max_cmd_len
+
+# Object file suffix (normally "o").
+objext=$ac_objext
+
+# Executable file suffix (normally "").
+exeext=$exeext
+
+# whether the shell understands "unset".
+lt_unset=$lt_unset
+
+# turn spaces into newlines.
+SP2NL=$lt_lt_SP2NL
+
+# turn newlines into spaces.
+NL2SP=$lt_lt_NL2SP
+
+# An object symbol dumper.
+OBJDUMP=$lt_OBJDUMP
+
+# Method to check whether dependent libraries are shared objects.
+deplibs_check_method=$lt_deplibs_check_method
+
+# Command to use when deplibs_check_method == "file_magic".
+file_magic_cmd=$lt_file_magic_cmd
+
+# The archiver.
+AR=$lt_AR
+AR_FLAGS=$lt_AR_FLAGS
+
+# A symbol stripping program.
+STRIP=$lt_STRIP
+
+# Commands used to install an old-style archive.
+RANLIB=$lt_RANLIB
+old_postinstall_cmds=$lt_old_postinstall_cmds
+old_postuninstall_cmds=$lt_old_postuninstall_cmds
+
+# Whether to use a lock for old archive extraction.
+lock_old_archive_extraction=$lock_old_archive_extraction
+
+# A C compiler.
+LTCC=$lt_CC
+
+# LTCC compiler flags.
+LTCFLAGS=$lt_CFLAGS
+
+# Take the output of nm and produce a listing of raw symbols and C names.
+global_symbol_pipe=$lt_lt_cv_sys_global_symbol_pipe
+
+# Transform the output of nm in a proper C declaration.
+global_symbol_to_cdecl=$lt_lt_cv_sys_global_symbol_to_cdecl
+
+# Transform the output of nm in a C name address pair.
+global_symbol_to_c_name_address=$lt_lt_cv_sys_global_symbol_to_c_name_address
+
+# Transform the output of nm in a C name address pair when lib prefix is needed.
+global_symbol_to_c_name_address_lib_prefix=$lt_lt_cv_sys_global_symbol_to_c_name_address_lib_prefix
+
+# The name of the directory that contains temporary libtool files.
+objdir=$objdir
+
+# Used to examine libraries when file_magic_cmd begins with "file".
+MAGIC_CMD=$MAGIC_CMD
+
+# Must we lock files when doing compilation?
+need_locks=$lt_need_locks
+
+# Tool to manipulate archived DWARF debug symbol files on Mac OS X.
+DSYMUTIL=$lt_DSYMUTIL
+
+# Tool to change global to local symbols on Mac OS X.
+NMEDIT=$lt_NMEDIT
+
+# Tool to manipulate fat objects and archives on Mac OS X.
+LIPO=$lt_LIPO
+
+# ldd/readelf like tool for Mach-O binaries on Mac OS X.
+OTOOL=$lt_OTOOL
+
+# ldd/readelf like tool for 64 bit Mach-O binaries on Mac OS X 10.4.
+OTOOL64=$lt_OTOOL64
+
+# Old archive suffix (normally "a").
+libext=$libext
+
+# Shared library suffix (normally ".so").
+shrext_cmds=$lt_shrext_cmds
+
+# The commands to extract the exported symbol list from a shared archive.
+extract_expsyms_cmds=$lt_extract_expsyms_cmds
+
+# Variables whose values should be saved in libtool wrapper scripts and
+# restored at link time.
+variables_saved_for_relink=$lt_variables_saved_for_relink
+
+# Do we need the "lib" prefix for modules?
+need_lib_prefix=$need_lib_prefix
+
+# Do we need a version for libraries?
+need_version=$need_version
+
+# Library versioning type.
+version_type=$version_type
+
+# Shared library runtime path variable.
+runpath_var=$runpath_var
+
+# Shared library path variable.
+shlibpath_var=$shlibpath_var
+
+# Is shlibpath searched before the hard-coded library search path?
+shlibpath_overrides_runpath=$shlibpath_overrides_runpath
+
+# Format of library name prefix.
+libname_spec=$lt_libname_spec
+
+# List of archive names.  First name is the real one, the rest are links.
+# The last name is the one that the linker finds with -lNAME
+library_names_spec=$lt_library_names_spec
+
+# The coded name of the library, if different from the real name.
+soname_spec=$lt_soname_spec
+
+# Permission mode override for installation of shared libraries.
+install_override_mode=$lt_install_override_mode
+
+# Command to use after installation of a shared archive.
+postinstall_cmds=$lt_postinstall_cmds
+
+# Command to use after uninstallation of a shared archive.
+postuninstall_cmds=$lt_postuninstall_cmds
+
+# Commands used to finish a libtool library installation in a directory.
+finish_cmds=$lt_finish_cmds
+
+# As "finish_cmds", except a single script fragment to be evaled but
+# not shown.
+finish_eval=$lt_finish_eval
+
+# Whether we should hardcode library paths into libraries.
+hardcode_into_libs=$hardcode_into_libs
+
+# Compile-time system search path for libraries.
+sys_lib_search_path_spec=$lt_sys_lib_search_path_spec
+
+# Run-time system search path for libraries.
+sys_lib_dlsearch_path_spec=$lt_sys_lib_dlsearch_path_spec
+
+# Whether dlopen is supported.
+dlopen_support=$enable_dlopen
+
+# Whether dlopen of programs is supported.
+dlopen_self=$enable_dlopen_self
+
+# Whether dlopen of statically linked programs is supported.
+dlopen_self_static=$enable_dlopen_self_static
+
+# Commands to strip libraries.
+old_striplib=$lt_old_striplib
+striplib=$lt_striplib
+
+
+# The linker used to build libraries.
+LD=$lt_LD
+
+# How to create reloadable object files.
+reload_flag=$lt_reload_flag
+reload_cmds=$lt_reload_cmds
+
+# Commands used to build an old-style archive.
+old_archive_cmds=$lt_old_archive_cmds
+
+# A language specific compiler.
+CC=$lt_compiler
+
+# Is the compiler the GNU compiler?
+with_gcc=$GCC
+
+# Compiler flag to turn off builtin functions.
+no_builtin_flag=$lt_lt_prog_compiler_no_builtin_flag
+
+# How to pass a linker flag through the compiler.
+wl=$lt_lt_prog_compiler_wl
+
+# Additional compiler flags for building library objects.
+pic_flag=$lt_lt_prog_compiler_pic
+
+# Compiler flag to prevent dynamic linking.
+link_static_flag=$lt_lt_prog_compiler_static
+
+# Does compiler simultaneously support -c and -o options?
+compiler_c_o=$lt_lt_cv_prog_compiler_c_o
+
+# Whether or not to add -lc for building shared libraries.
+build_libtool_need_lc=$archive_cmds_need_lc
+
+# Whether or not to disallow shared libs when runtime libs are static.
+allow_libtool_libs_with_static_runtimes=$enable_shared_with_static_runtimes
+
+# Compiler flag to allow reflexive dlopens.
+export_dynamic_flag_spec=$lt_export_dynamic_flag_spec
+
+# Compiler flag to generate shared objects directly from archives.
+whole_archive_flag_spec=$lt_whole_archive_flag_spec
+
+# Whether the compiler copes with passing no objects directly.
+compiler_needs_object=$lt_compiler_needs_object
+
+# Create an old-style archive from a shared archive.
+old_archive_from_new_cmds=$lt_old_archive_from_new_cmds
+
+# Create a temporary old-style archive to link instead of a shared archive.
+old_archive_from_expsyms_cmds=$lt_old_archive_from_expsyms_cmds
+
+# Commands used to build a shared archive.
+archive_cmds=$lt_archive_cmds
+archive_expsym_cmds=$lt_archive_expsym_cmds
+
+# Commands used to build a loadable module if different from building
+# a shared archive.
+module_cmds=$lt_module_cmds
+module_expsym_cmds=$lt_module_expsym_cmds
+
+# Whether we are building with GNU ld or not.
+with_gnu_ld=$lt_with_gnu_ld
+
+# Flag that allows shared libraries with undefined symbols to be built.
+allow_undefined_flag=$lt_allow_undefined_flag
+
+# Flag that enforces no undefined symbols.
+no_undefined_flag=$lt_no_undefined_flag
+
+# Flag to hardcode \$libdir into a binary during linking.
+# This must work even if \$libdir does not exist
+hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec
+
+# If ld is used when linking, flag to hardcode \$libdir into a binary
+# during linking.  This must work even if \$libdir does not exist.
+hardcode_libdir_flag_spec_ld=$lt_hardcode_libdir_flag_spec_ld
+
+# Whether we need a single "-rpath" flag with a separated argument.
+hardcode_libdir_separator=$lt_hardcode_libdir_separator
+
+# Set to "yes" if using DIR/libNAME\${shared_ext} during linking hardcodes
+# DIR into the resulting binary.
+hardcode_direct=$hardcode_direct
+
+# Set to "yes" if using DIR/libNAME\${shared_ext} during linking hardcodes
+# DIR into the resulting binary and the resulting library dependency is
+# "absolute",i.e impossible to change by setting \${shlibpath_var} if the
+# library is relocated.
+hardcode_direct_absolute=$hardcode_direct_absolute
+
+# Set to "yes" if using the -LDIR flag during linking hardcodes DIR
+# into the resulting binary.
+hardcode_minus_L=$hardcode_minus_L
+
+# Set to "yes" if using SHLIBPATH_VAR=DIR during linking hardcodes DIR
+# into the resulting binary.
+hardcode_shlibpath_var=$hardcode_shlibpath_var
+
+# Set to "yes" if building a shared library automatically hardcodes DIR
+# into the library and all subsequent libraries and executables linked
+# against it.
+hardcode_automatic=$hardcode_automatic
+
+# Set to yes if linker adds runtime paths of dependent libraries
+# to runtime path list.
+inherit_rpath=$inherit_rpath
+
+# Whether libtool must link a program against all its dependency libraries.
+link_all_deplibs=$link_all_deplibs
+
+# Fix the shell variable \$srcfile for the compiler.
+fix_srcfile_path=$lt_fix_srcfile_path
+
+# Set to "yes" if exported symbols are required.
+always_export_symbols=$always_export_symbols
+
+# The commands to list exported symbols.
+export_symbols_cmds=$lt_export_symbols_cmds
+
+# Symbols that should not be listed in the preloaded symbols.
+exclude_expsyms=$lt_exclude_expsyms
+
+# Symbols that must always be exported.
+include_expsyms=$lt_include_expsyms
+
+# Commands necessary for linking programs (against libraries) with templates.
+prelink_cmds=$lt_prelink_cmds
+
+# Specify filename containing input files.
+file_list_spec=$lt_file_list_spec
+
+# How to hardcode a shared library path into an executable.
+hardcode_action=$hardcode_action
+
+# ### END LIBTOOL CONFIG
+
+_LT_EOF
+
+  case $host_os in
+  aix3*)
+    cat <<\_LT_EOF >> "$cfgfile"
+# AIX sometimes has problems with the GCC collect2 program.  For some
+# reason, if we set the COLLECT_NAMES environment variable, the problems
+# vanish in a puff of smoke.
+if test "X${COLLECT_NAMES+set}" != Xset; then
+  COLLECT_NAMES=
+  export COLLECT_NAMES
+fi
+_LT_EOF
+    ;;
+  esac
+
+
+ltmain="$ac_aux_dir/ltmain.sh"
+
+
+  # We use sed instead of cat because bash on DJGPP gets confused if
+  # if finds mixed CR/LF and LF-only lines.  Since sed operates in
+  # text mode, it properly converts lines to CR/LF.  This bash problem
+  # is reportedly fixed, but why not run on old versions too?
+  sed '/^# Generated shell functions inserted here/q' "$ltmain" >> "$cfgfile" \
+    || (rm -f "$cfgfile"; exit 1)
+
+  case $xsi_shell in
+  yes)
+    cat << \_LT_EOF >> "$cfgfile"
+
+# func_dirname file append nondir_replacement
+# Compute the dirname of FILE.  If nonempty, add APPEND to the result,
+# otherwise set result to NONDIR_REPLACEMENT.
+func_dirname ()
+{
+  case ${1} in
+    */*) func_dirname_result="${1%/*}${2}" ;;
+    *  ) func_dirname_result="${3}" ;;
+  esac
+}
+
+# func_basename file
+func_basename ()
+{
+  func_basename_result="${1##*/}"
+}
+
+# func_dirname_and_basename file append nondir_replacement
+# perform func_basename and func_dirname in a single function
+# call:
+#   dirname:  Compute the dirname of FILE.  If nonempty,
+#             add APPEND to the result, otherwise set result
+#             to NONDIR_REPLACEMENT.
+#             value returned in "$func_dirname_result"
+#   basename: Compute filename of FILE.
+#             value retuned in "$func_basename_result"
+# Implementation must be kept synchronized with func_dirname
+# and func_basename. For efficiency, we do not delegate to
+# those functions but instead duplicate the functionality here.
+func_dirname_and_basename ()
+{
+  case ${1} in
+    */*) func_dirname_result="${1%/*}${2}" ;;
+    *  ) func_dirname_result="${3}" ;;
+  esac
+  func_basename_result="${1##*/}"
+}
+
+# func_stripname prefix suffix name
+# strip PREFIX and SUFFIX off of NAME.
+# PREFIX and SUFFIX must not contain globbing or regex special
+# characters, hashes, percent signs, but SUFFIX may contain a leading
+# dot (in which case that matches only a dot).
+func_stripname ()
+{
+  # pdksh 5.2.14 does not do ${X%$Y} correctly if both X and Y are
+  # positional parameters, so assign one to ordinary parameter first.
+  func_stripname_result=${3}
+  func_stripname_result=${func_stripname_result#"${1}"}
+  func_stripname_result=${func_stripname_result%"${2}"}
+}
+
+# func_opt_split
+func_opt_split ()
+{
+  func_opt_split_opt=${1%%=*}
+  func_opt_split_arg=${1#*=}
+}
+
+# func_lo2o object
+func_lo2o ()
+{
+  case ${1} in
+    *.lo) func_lo2o_result=${1%.lo}.${objext} ;;
+    *)    func_lo2o_result=${1} ;;
+  esac
+}
+
+# func_xform libobj-or-source
+func_xform ()
+{
+  func_xform_result=${1%.*}.lo
+}
+
+# func_arith arithmetic-term...
+func_arith ()
+{
+  func_arith_result=$(( $* ))
+}
+
+# func_len string
+# STRING may not start with a hyphen.
+func_len ()
+{
+  func_len_result=${#1}
+}
+
+_LT_EOF
+    ;;
+  *) # Bourne compatible functions.
+    cat << \_LT_EOF >> "$cfgfile"
+
+# func_dirname file append nondir_replacement
+# Compute the dirname of FILE.  If nonempty, add APPEND to the result,
+# otherwise set result to NONDIR_REPLACEMENT.
+func_dirname ()
+{
+  # Extract subdirectory from the argument.
+  func_dirname_result=`$ECHO "${1}" | $SED "$dirname"`
+  if test "X$func_dirname_result" = "X${1}"; then
+    func_dirname_result="${3}"
+  else
+    func_dirname_result="$func_dirname_result${2}"
+  fi
+}
+
+# func_basename file
+func_basename ()
+{
+  func_basename_result=`$ECHO "${1}" | $SED "$basename"`
+}
+
+
+# func_stripname prefix suffix name
+# strip PREFIX and SUFFIX off of NAME.
+# PREFIX and SUFFIX must not contain globbing or regex special
+# characters, hashes, percent signs, but SUFFIX may contain a leading
+# dot (in which case that matches only a dot).
+# func_strip_suffix prefix name
+func_stripname ()
+{
+  case ${2} in
+    .*) func_stripname_result=`$ECHO "${3}" | $SED "s%^${1}%%; s%\\\\${2}\$%%"`;;
+    *)  func_stripname_result=`$ECHO "${3}" | $SED "s%^${1}%%; s%${2}\$%%"`;;
+  esac
+}
+
+# sed scripts:
+my_sed_long_opt='1s/^\(-[^=]*\)=.*/\1/;q'
+my_sed_long_arg='1s/^-[^=]*=//'
+
+# func_opt_split
+func_opt_split ()
+{
+  func_opt_split_opt=`$ECHO "${1}" | $SED "$my_sed_long_opt"`
+  func_opt_split_arg=`$ECHO "${1}" | $SED "$my_sed_long_arg"`
+}
+
+# func_lo2o object
+func_lo2o ()
+{
+  func_lo2o_result=`$ECHO "${1}" | $SED "$lo2o"`
+}
+
+# func_xform libobj-or-source
+func_xform ()
+{
+  func_xform_result=`$ECHO "${1}" | $SED 's/\.[^.]*$/.lo/'`
+}
+
+# func_arith arithmetic-term...
+func_arith ()
+{
+  func_arith_result=`expr "$@"`
+}
+
+# func_len string
+# STRING may not start with a hyphen.
+func_len ()
+{
+  func_len_result=`expr "$1" : ".*" 2>/dev/null || echo $max_cmd_len`
+}
+
+_LT_EOF
+esac
+
+case $lt_shell_append in
+  yes)
+    cat << \_LT_EOF >> "$cfgfile"
+
+# func_append var value
+# Append VALUE to the end of shell variable VAR.
+func_append ()
+{
+  eval "$1+=\$2"
+}
+_LT_EOF
+    ;;
+  *)
+    cat << \_LT_EOF >> "$cfgfile"
+
+# func_append var value
+# Append VALUE to the end of shell variable VAR.
+func_append ()
+{
+  eval "$1=\$$1\$2"
+}
+
+_LT_EOF
+    ;;
+  esac
+
+
+  sed -n '/^# Generated shell functions inserted here/,$p' "$ltmain" >> "$cfgfile" \
+    || (rm -f "$cfgfile"; exit 1)
+
+  mv -f "$cfgfile" "$ofile" ||
+    (rm -f "$ofile" && cp "$cfgfile" "$ofile" && rm -f "$cfgfile")
+  chmod +x "$ofile"
+
+
+    cat <<_LT_EOF >> "$ofile"
+
+# ### BEGIN LIBTOOL TAG CONFIG: F77
+
+# The linker used to build libraries.
+LD=$lt_LD_F77
+
+# How to create reloadable object files.
+reload_flag=$lt_reload_flag_F77
+reload_cmds=$lt_reload_cmds_F77
+
+# Commands used to build an old-style archive.
+old_archive_cmds=$lt_old_archive_cmds_F77
+
+# A language specific compiler.
+CC=$lt_compiler_F77
+
+# Is the compiler the GNU compiler?
+with_gcc=$GCC_F77
+
+# Compiler flag to turn off builtin functions.
+no_builtin_flag=$lt_lt_prog_compiler_no_builtin_flag_F77
+
+# How to pass a linker flag through the compiler.
+wl=$lt_lt_prog_compiler_wl_F77
+
+# Additional compiler flags for building library objects.
+pic_flag=$lt_lt_prog_compiler_pic_F77
+
+# Compiler flag to prevent dynamic linking.
+link_static_flag=$lt_lt_prog_compiler_static_F77
+
+# Does compiler simultaneously support -c and -o options?
+compiler_c_o=$lt_lt_cv_prog_compiler_c_o_F77
+
+# Whether or not to add -lc for building shared libraries.
+build_libtool_need_lc=$archive_cmds_need_lc_F77
+
+# Whether or not to disallow shared libs when runtime libs are static.
+allow_libtool_libs_with_static_runtimes=$enable_shared_with_static_runtimes_F77
+
+# Compiler flag to allow reflexive dlopens.
+export_dynamic_flag_spec=$lt_export_dynamic_flag_spec_F77
+
+# Compiler flag to generate shared objects directly from archives.
+whole_archive_flag_spec=$lt_whole_archive_flag_spec_F77
+
+# Whether the compiler copes with passing no objects directly.
+compiler_needs_object=$lt_compiler_needs_object_F77
+
+# Create an old-style archive from a shared archive.
+old_archive_from_new_cmds=$lt_old_archive_from_new_cmds_F77
+
+# Create a temporary old-style archive to link instead of a shared archive.
+old_archive_from_expsyms_cmds=$lt_old_archive_from_expsyms_cmds_F77
+
+# Commands used to build a shared archive.
+archive_cmds=$lt_archive_cmds_F77
+archive_expsym_cmds=$lt_archive_expsym_cmds_F77
+
+# Commands used to build a loadable module if different from building
+# a shared archive.
+module_cmds=$lt_module_cmds_F77
+module_expsym_cmds=$lt_module_expsym_cmds_F77
+
+# Whether we are building with GNU ld or not.
+with_gnu_ld=$lt_with_gnu_ld_F77
+
+# Flag that allows shared libraries with undefined symbols to be built.
+allow_undefined_flag=$lt_allow_undefined_flag_F77
+
+# Flag that enforces no undefined symbols.
+no_undefined_flag=$lt_no_undefined_flag_F77
+
+# Flag to hardcode \$libdir into a binary during linking.
+# This must work even if \$libdir does not exist
+hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec_F77
+
+# If ld is used when linking, flag to hardcode \$libdir into a binary
+# during linking.  This must work even if \$libdir does not exist.
+hardcode_libdir_flag_spec_ld=$lt_hardcode_libdir_flag_spec_ld_F77
+
+# Whether we need a single "-rpath" flag with a separated argument.
+hardcode_libdir_separator=$lt_hardcode_libdir_separator_F77
+
+# Set to "yes" if using DIR/libNAME\${shared_ext} during linking hardcodes
+# DIR into the resulting binary.
+hardcode_direct=$hardcode_direct_F77
+
+# Set to "yes" if using DIR/libNAME\${shared_ext} during linking hardcodes
+# DIR into the resulting binary and the resulting library dependency is
+# "absolute",i.e impossible to change by setting \${shlibpath_var} if the
+# library is relocated.
+hardcode_direct_absolute=$hardcode_direct_absolute_F77
+
+# Set to "yes" if using the -LDIR flag during linking hardcodes DIR
+# into the resulting binary.
+hardcode_minus_L=$hardcode_minus_L_F77
+
+# Set to "yes" if using SHLIBPATH_VAR=DIR during linking hardcodes DIR
+# into the resulting binary.
+hardcode_shlibpath_var=$hardcode_shlibpath_var_F77
+
+# Set to "yes" if building a shared library automatically hardcodes DIR
+# into the library and all subsequent libraries and executables linked
+# against it.
+hardcode_automatic=$hardcode_automatic_F77
+
+# Set to yes if linker adds runtime paths of dependent libraries
+# to runtime path list.
+inherit_rpath=$inherit_rpath_F77
+
+# Whether libtool must link a program against all its dependency libraries.
+link_all_deplibs=$link_all_deplibs_F77
+
+# Fix the shell variable \$srcfile for the compiler.
+fix_srcfile_path=$lt_fix_srcfile_path_F77
+
+# Set to "yes" if exported symbols are required.
+always_export_symbols=$always_export_symbols_F77
+
+# The commands to list exported symbols.
+export_symbols_cmds=$lt_export_symbols_cmds_F77
+
+# Symbols that should not be listed in the preloaded symbols.
+exclude_expsyms=$lt_exclude_expsyms_F77
+
+# Symbols that must always be exported.
+include_expsyms=$lt_include_expsyms_F77
+
+# Commands necessary for linking programs (against libraries) with templates.
+prelink_cmds=$lt_prelink_cmds_F77
+
+# Specify filename containing input files.
+file_list_spec=$lt_file_list_spec_F77
+
+# How to hardcode a shared library path into an executable.
+hardcode_action=$hardcode_action_F77
+
+# ### END LIBTOOL TAG CONFIG: F77
+_LT_EOF
+
+ ;;
+
+  esac
 done # for ac_tag
 
 
-{ (exit 0); exit 0; }
+as_fn_exit 0

@@ -10,26 +10,21 @@ fi
 
 # Create filenames
 
-FORTRAN_FILE=$(echo $1 | sed s/\.explor/.f/)
-#OBJECT_FILE=$(echo $1 | sed s/\.explor/.o/)
-EXECUTABLE_FILE=$(echo $1 | sed s/\.explor//)
-OUTPUT_FILE=$(echo $1 | sed s/\.explor/.ps/)
+EXECUTABLE_FILE="$(echo ${1} | sed s/\.explor//)"
+PS_FILE="$(echo ${1} | sed s/\.explor/.ps/)"
 
 # Wrap Explor program in Fortran
 
-echo "Compiling $1 to $EXECUTABLE_FILE"
+echo "Compiling ${1} to ${EXECUTABLE_FILE}"
 
-echo "\
-      program explor
-      call initexplor
-$(cat $1)
-      end
-" > $FORTRAN_FILE
 
 # Compile and run
-# mini-explor.f should be a library...
+# "cat $1 end.f" adds END to the program, as explor listings don't have it
 
-(@fortran@ -combine -o $EXECUTABLE_FILE \
-    @pkgdatadir@/mini-explor.f $FORTRAN_FILE) && \
-(echo "Running $EXECUTABLE_FILE with output to $OUTPUT_FILE") && \
-($EXECUTABLE_FILE > $OUTPUT_FILE)
+(cat "${1}" @pkgdatadir@/end.f | @fortran@ -xf77 -o "${EXECUTABLE_FILE}" \
+    -L@libdir@ -Wl,-rpath -Wl,@libdir@ -lexplor -) && \
+(echo "Running $EXECUTABLE_FILE with output to $PS_FILE") && \
+("$(pwd)/${EXECUTABLE_FILE}" > "${PS_FILE}") && \
+# Document viewers can show ps quite happily, a
+#(echo "Converting $PS_FILE to PDF") && \
+#(ps2pdf "${PS_FILE}")
